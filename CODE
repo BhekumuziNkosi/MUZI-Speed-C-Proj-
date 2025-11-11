@@ -1,0 +1,292 @@
+C++
+#include <iostream>
+#include <vector>
+#include <string>
+#include <chrono>
+#include <limits>
+#include <algorithm>
+struct PracticeText { std::string name; std::string content; }; struct LeaderboardEntry
+{ std::string username; double time; int mistakes; }; std::vector<PracticeText> practice_texts = {
+{"Quick Brown Fox", "The quick brown fox jumps over the lazy dog."}, {"Technology Quote", "Technology is best when it brings people together. 
+Innovation distinguishes between a leader and a follower. The advance of technology is based on making it fit in
+so that you don't really even notice it."}, {"Programming Wisdom", "Code is like humor. When you have to explain it, it's bad.
+First, solve the problem. Then, write the code. Any fool can write code that a computer can understand.
+Good programmers write code that humans can understand."}, {"Short Practice", "Practice makes perfect. The more you type, the faster you become.
+Speed and accuracy go hand in hand."} }; std::vector<LeaderboardEntry> leaderboard; void show_text_options()
+{ std::cout << "Select Practice Text:\n"; for (size_t i = 0; i < practice_texts.size(); ++i)
+{ std::cout << i + 1 << ". " << practice_texts[i].name << std::endl; } std::cout << "Enter option number: ";
+} void add_to_leaderboard(const LeaderboardEntry& entry) { leaderboard.push_back(entry); std::sort(leaderboard.begin(),
+leaderboard.end(), [](const LeaderboardEntry& a, const LeaderboardEntry& b) { return a.time < b.time; }); if (leaderboard.size() 
+> 10) leaderboard.pop_back(); } void show_leaderboard() { std::cout << "\nLeaderboard\n"; for (size_t i = 0; i < leaderboard.size();
+++i) { std::cout << i + 1 << ". " << leaderboard[i].username << " - " << leaderboard[i].time << "s, " << leaderboard[i].mistakes 
+<< " mistakes\n"; } } int main() { int choice; std::string username; std::cout << "MuziSpeed Typing Practice\n"; std::cout 
+<< "Enter your username: "; std::getline(std::cin, username); while (true) { show_text_options(); std::cin >> choice; 
+std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); // clear input if (choice < 1 || choice > practice_texts.size()) 
+break; PracticeText& selected = practice_texts[choice - 1]; std::cout << "\nText to Type:\n" << selected.content << "\n\n"; std::cout 
+<< "Press Enter to start.\n"; std::cin.ignore(); auto start = std::chrono::high_resolution_clock::now(); std::string input; std::cout 
+<< "Type Here: "; std::getline(std::cin, input); auto end = std::chrono::high_resolution_clock::now(); 
+int mistakes = 0; size_t len = std::min(input.length(), selected.content.length()); for (size_t i = 0;
+i < len; ++i) { if (input[i] != selected.content[i]) mistakes++; } mistakes += std::max(input.length(), 
+selected.content.length()) - len; std::chrono::duration<double> sec = end - start; double time_taken = sec.count(); std::cout
+<< "\nResults\nTotal Time: " << time_taken << "s\nMistakes: " << mistakes << "\n"; LeaderboardEntry entry = {username, time_taken, mistakes}; 
+add_to_leaderboard(entry); show_leaderboard(); std::cout << "\nType 'q' to quit or any other key to try again: "; char cont; std::cin 
+>> cont; std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); if (cont == 'q' || cont == 'Q') break;
+} return 0; }
+....HTML....
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MUZI-Speed Typing Test</title>
+
+<!-- GOOGLE FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+        color: #fff;
+        font-family: 'Orbitron', sans-serif;
+        backdrop-filter: blur(3px);
+        margin: 0;
+        height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* Floating particles animation */
+    .particle {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: #00eaff;
+        border-radius: 50%;
+        opacity: 0.7;
+        animation: float 10s linear infinite;
+    }
+    @keyframes float {
+        from { transform: translateY(110vh) translateX(0); }
+        to   { transform: translateY(-10vh) translateX(50px); }
+    }
+
+    .container {
+        width: 650px;
+        background: rgba(0,0,0,0.75);
+        padding: 30px;
+        border-radius: 18px;
+        margin: 60px auto;
+        box-shadow: 0 0 35px rgba(0,255,255,0.4);
+        animation: fadeIn 1.5s ease forwards;
+        border: 1px solid #00eaff;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 42px;
+        color: #00eaff;
+        text-shadow: 0 0 15px #00eaff;
+        animation: glowPulse 2s infinite;
+    }
+    @keyframes glowPulse {
+        0% { text-shadow: 0 0 10px #00eaff; }
+        50% { text-shadow: 0 0 25px #00ccff; }
+        100% { text-shadow: 0 0 10px #00eaff; }
+    }
+
+    select, textarea {
+        width: 100%;
+        padding: 14px;
+        background: #111;
+        border: 1px solid #00eaff;
+        color: white;
+        border-radius: 10px;
+        margin: 10px 0;
+        transition: 0.3s;
+    }
+    select:hover, textarea:hover {
+        box-shadow: 0 0 15px #00eaff;
+    }
+
+    button {
+        width: 48%;
+        padding: 14px;
+        border: none;
+        background: #00eaff;
+        color: black;
+        font-size: 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-right: 4%;
+        transition: transform 0.2s;
+    }
+    button:hover {
+        transform: scale(1.05);
+    }
+    button:disabled {
+        background: #444;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    #display-text {
+        padding: 15px;
+        background: #111;
+        border-left: 5px solid #00eaff;
+        border-radius: 8px;
+        min-height: 60px;
+        margin-bottom: 20px;
+        font-family: Courier New, monospace;
+        animation: fadeIn 1.2s ease forwards;
+    }
+
+    #leaderboard-container {
+        margin-top: 25px;
+        background: #111;
+        border: 1px solid #00eaff;
+        border-radius: 10px;
+        padding: 20px;
+        animation: fadeIn 1.5s ease forwards;
+    }
+
+    ol { padding-left: 25px; }
+
+    .hidden { display: none; }
+</style>
+</head>
+
+<body>
+
+<!-- FLOATING PARTICLES -->
+<script>
+for (let i = 0; i < 25; i++) {
+    let p = document.createElement("div");
+    p.classList.add("particle");
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.animationDuration = (8 + Math.random() * 6) + "s";
+    document.body.appendChild(p);
+}
+</script>
+
+<div class="container">
+
+    <h1>MUZI-Speed</h1>
+    <p style="text-align:center;opacity:0.8;margin-top:-5px;">Animated Typing Speed & Accuracy Test</p>
+
+    <label>Select Practice Text</label>
+    <select id="practice-text">
+        <option value="" disabled selected>Select a text...</option>
+        <option value="tech">Technology Quote</option>
+        <option value="fox">Quick Brown Fox</option>
+        <option value="prog">Programming Wisdom</option>
+        <option value="short">Short Practice</option>
+    </select>
+
+    <h3>Text to Type</h3>
+    <div id="display-text"></div>
+
+    <textarea id="typing-area" rows="5" placeholder="Type here..." disabled></textarea>
+
+    <div>
+        <button id="start-btn">Start</button>
+        <button id="finish-btn" disabled>Finish</button>
+    </div>
+
+    <div id="results" class="hidden" style="margin-top:15px;">
+        <h3>Results</h3>
+        <p><strong>Total Time:</strong> <span id="total-time">0.00s</span></p>
+        <p><strong>Mistakes:</strong> <span id="mistakes">0</span></p>
+    </div>
+
+    <div id="leaderboard-container">
+        <h3>Leaderboard</h3>
+        <ol id="leaderboard-list"></ol>
+    </div>
+
+</div>
+
+<!-- SOUND EFFECTS -->
+<audio id="typeSound" src="https://assets.mixkit.co/sfx/preview/mixkit-soft-click-256.wav"></audio>
+<audio id="finishSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2014.wav"></audio>
+
+<script>
+const texts = {
+    tech: "Technology is best when it brings people together. Innovation distinguishes between a leader and a follower.",
+    fox: "The quick brown fox jumps over the lazy dog.",
+    prog: "Code is like humor. When you have to explain it, it's bad.",
+    short: "Practice makes perfect. Speed and accuracy go hand in hand."
+};
+
+let startTime = null;
+let leaderboard = [];
+
+document.getElementById("practice-text").addEventListener("change", () => {
+    const key = document.getElementById("practice-text").value;
+    document.getElementById("display-text").innerText = texts[key] || "";
+    document.getElementById("typing-area").disabled = true;
+    document.getElementById("results").classList.add("hidden");
+    document.getElementById("finish-btn").disabled = true;
+});
+
+document.getElementById("typing-area").addEventListener("keydown", () => {
+    document.getElementById("typeSound").play();
+});
+
+document.getElementById("start-btn").onclick = () => {
+    document.getElementById("typing-area").value = "";
+    document.getElementById("typing-area").disabled = false;
+    document.getElementById("typing-area").focus();
+    document.getElementById("finish-btn").disabled = false;
+
+    startTime = Date.now();
+    document.getElementById("start-btn").disabled = true;
+};
+
+document.getElementById("finish-btn").onclick = () => {
+
+    document.getElementById("finishSound").play();
+
+    const input = document.getElementById("typing-area").value;
+    const key = document.getElementById("practice-text").value;
+    const target = texts[key];
+
+    let mistakes = 0;
+    for (let i = 0; i < Math.max(input.length, target.length); i++) {
+        if (input[i] !== target[i]) mistakes++;
+    }
+
+    const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
+
+    document.getElementById("total-time").innerText = totalTime + "s";
+    document.getElementById("mistakes").innerText = mistakes;
+    document.getElementById("results").classList.remove("hidden");
+
+    leaderboard.push({ text: key, time: parseFloat(totalTime), mistakes: mistakes });
+    leaderboard.sort((a, b) => a.time - b.time);
+    if (leaderboard.length > 10) leaderboard.pop();
+
+    updateLeaderboard();
+
+    document.getElementById("start-btn").disabled = false;
+    document.getElementById("finish-btn").disabled = true;
+    document.getElementById("typing-area").disabled = true;
+};
+
+function updateLeaderboard() {
+    const list = document.getElementById("leaderboard-list");
+    list.innerHTML = "";
+    leaderboard.forEach(entry => {
+        const li = document.createElement("li");
+        li.innerText = `${entry.time}s - ${entry.mistakes} mistakes`;
+        list.appendChild(li);
+    });
+}
+</script>
+
+</body>
+</html>
+
+
